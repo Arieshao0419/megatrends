@@ -3,7 +3,7 @@
 ## To get access to the Facebook API, you need an OAuth code.
 ## not sure how long this access token is valid (it belongs to Alana)
 
-fb_oauth = 'EAAHm3H5TfvMBADDgFandXLqJUUB8eB3b2CoQhIEtZC74OlCN1WH99rLWJnYqRGKBHTOOtw9MtsWC6ICRZCwIZBbHuRzCTYSkkw0tDYutZBJ41QtVmsflrU3t9XK9PIGCNdrT5EZBtbVjaNyqj4WwRRfNJDPMJCyEZD'
+fb_oauth = ''
 
 ## Run the following line to return facebook public information:
 getUsers("me", token=fb_oauth, private_info=TRUE)
