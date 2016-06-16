@@ -1,7 +1,6 @@
 # Load Rfacebook package
 
 ## To get access to the Facebook API, you need an OAuth code.
-## not sure how long this access token is valid (it belongs to Alana)
 
 fb_oauth = ''
 
