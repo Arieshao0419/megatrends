@@ -1,0 +1,69 @@
+# Packages
+library(Rfacebook)
+library(httr)
+library(httpuv)
+library(rjson)
+
+## need fb access toden here
+fb_oauth = 'EAACEdEose0cBAJKmaVVonYAQ83whc0s36IwXkVzGLUXUjVXPv5Dm9WPGHkvOVvkC6GLxTmNjuKS6355JipIKJtwjawfeg4LFpRvBfM9h6yHtac6afMvmSP3EKuWPHZAeaWusPZA0fV6LTs1AUtCrygedETn925KIKLudO9pQZDZD'
+
+## Run the following line to return facebook public information for user:
+getUsers("me", token=fb_oauth, private_info=TRUE)
+
+## See also ?fbOAuth for information on how to get a long-lived OAuth token
+
+################################################
+############# SCRAPE FACEBOOK PAGES ############
+################################################
+
+## Get posts from = to
+uon_page <- getPage(page = "TheUniversityofNewcastleAustralia", token = fb_oauth, n = 1000, since = "2016/05/19", until = "2016/06/19")
+
+## read
+uon_page <- read.table("uon_page.txt")
+
+## View page details
+names(uon_page)
+head(uon_page)
+
+## Most Likes
+uon_page[which.max(uon_page$likes_count), ]
+
+## Get posts and comments
+post <- getPost("67258704085_10153848235689086", n = 2000, token = fb_oauth)
+
+## Get Details
+post1 <- read.table("post1.txt")
+post2 <- read.table("post2.txt")
+post3 <- read.table("post3.txt")
+post <- list(post = post1, likes = post2, comments = post3)
+tail(post$comments)
+
+## Who liked it
+head(post$likes)
+
+## information about people who liked
+people <- getUsers(post$likes$from_id, token = fb_oauth)
+people <- read.table("people.txt")
+head(people)
+
+##############################################################
+#################### ANALYSE #################################
+##############################################################
+
+uon_page$created_time <- as.Date(substr(as.character(uon_page$created_time), 1, 10))
+march <- uon_page$created_time >= as.Date("2015/03/01")
+mar <- data.frame(time = sort(unique(uon_page$created_time[march])), 
+                  likes = tapply(uon_page[march, 8], uon_page[march, 4], sum),
+                  comments = tapply(uon_page[march, 9], uon_page[march, 4], sum), 
+                  shares = tapply(uon_page[march, 10], uon_page[march, 4], sum))
+library(ggplot2)
+library(scales)
+marpop <- data.frame(time = rep(mar$time, 3), 
+                     count = c(mar$likes, mar$comments, mar$shares),
+                     measure = rep(c("likes", "comments", "shares"), 
+                                   each = nrow(mar)))
+pmar <- ggplot(marpop, aes(time, count, colour = measure)) + geom_line() + 
+  ggtitle("University of Newcastle Facebook Page in May/June 2016") + 
+  scale_y_log10("Average count per day", breaks = c(10, 100, 1000))
+print(pmar)
