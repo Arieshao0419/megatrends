@@ -74,7 +74,7 @@ pma <- ggplot(mapop, aes(time, count, colour = measure)) + geom_line() +
 print(pma)
 
 ## What type of posts attracted most likes from May 19 to Jun 19 2016?
-
+## I got my months sorted wrong .. still working on it, feel free to change it
 MayC <- uon_page$created_time >= as.Date("2016/05/19") & 
   uon_page$created_time <= as.Date("2016/05/31")
 JunC <- uon_page$created_time >= as.Date("2016/06/01") & 
@@ -89,7 +89,7 @@ like <- data.frame(month = rep(1:6, each = 3),
                    type = rep(c( "link", "photo", "video"), 3),
                    likes = c(MC, JC, M))
 pl <- ggplot(like, aes(month, likes, fill = type)) + geom_bar(stat="identity") + 
-  ggtitle("Likes to uon from different post types on Facebook in 2016")
+  ggtitle("Likes from different post types on UON Facebook page ")
 print(pl)
 
 ############ ALL GOOD ### WORKS ###################
